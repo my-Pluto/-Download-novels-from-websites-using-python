@@ -38,9 +38,15 @@ def update(novel):
     name = novel['name']
     link = novel['link']
     date = novel['date']
-    ys = 'yes'
+    img = novel['img']
+    text_link = novel['text_link']
+    ys = 'no'
+
+    date = time.strptime(date, "%Y-%m-%d")
     # SQL 插入语句
-    sql = "UPDATE novels SET type='" + type + "', name='" + name + "', date='" + time.strftime("%Y-%m-%d", date) + "', ys='" + ys + "' WHERE link='" + link + "'"
+    sql = "UPDATE novels SET type='" + type + "', name='" + name + "', date='" + time.strftime("%Y-%m-%d",
+                                                                                               date) + "', ys='" + ys \
+          + "', img='" + img + "', text_link='" + text_link + "' WHERE link='" + link + "'"
     try:
         # 执行sql语句
         cursor.execute(sql)
@@ -53,9 +59,10 @@ def update(novel):
     # 关闭数据库连接
     db.close()
 
+
 def select(url):
     # 打开数据库连接
-    db = pymysql.connect("localhost", "testuser", "test123", "TESTDB")
+    db = pymysql.connect(host, sqlname, password, table)
 
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
@@ -79,14 +86,15 @@ def select(url):
     db.close()
     return rs
 
-def select_all():
-    db = pymysql.connect("localhost", "testuser", "test123", "TESTDB")
+
+def select_all(x):
+    db = pymysql.connect(host, sqlname, password, table)
 
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
 
     # SQL 查询语句
-    sql = "SELECT link FROM novels"
+    sql = "SELECT link FROM novels limit " + str(x) + ", 100"
     rs = []
     try:
         # 执行SQL语句
@@ -102,3 +110,27 @@ def select_all():
     # 关闭数据库连接
     db.close()
     return rs
+
+
+def get_number():
+    db = pymysql.connect(host, sqlname, password, table)
+
+    # 使用cursor()方法获取操作游标
+    cursor = db.cursor()
+
+    # SQL 查询语句
+    sql = "SELECT COUNT(*) FROM novels"
+    try:
+        # 执行SQL语句
+        cursor.execute(sql)
+        # 获取所有记录列表
+        results = cursor.fetchall()
+
+        for row in results:
+            number = row[0]
+    except:
+        print("Error: unable to fetch data")
+
+    # 关闭数据库连接
+    db.close()
+    return number
