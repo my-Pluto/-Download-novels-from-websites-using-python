@@ -4,13 +4,11 @@
 
 import os
 
-class Dir():
-    # 检测文件夹是否存在
-    @staticmethod
-    def check_dir(path):
-        return os.path.exists(path)
+# 检测文件夹是否存在
+def check_dir(path):
+    return os.path.exists(path)
 
-    # 创建文件夹
-    @staticmethod
-    def mkdir(path):
-        os.makedirs(path)
+
+# 创建文件夹
+def mkdir(path):
+    os.makedirs(path)
